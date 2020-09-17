@@ -51,6 +51,17 @@ const execute = async () => {
   }
 }
 
+const thirtyEightyCheckoutAvailable = async() => {
+  try {
+    let token = await getAccessToken();
+
+    return await getCheckoutAvailable(token, THIRTYEIGHTY);
+  } catch(e) {
+    return false;
+  }
+}
+
+
 app.get('/', (req, res) => {
   res.set('Content-Type', 'application/json');
 
@@ -61,5 +72,15 @@ app.get('/', (req, res) => {
     res.json({ error: 'idk lol something went wrong' });
   });
 });
+
+app.get(`/check`, (req, res) => {
+  thirtyEightyCheckoutAvailable().then((checkoutAvailable) => {
+    if (checkoutAvailable) {
+      res.status(420).send(`Let's go boyyy`);
+    } else {
+      res.status(200).send('Checkout still unavailable');
+    }
+  })
+})
 
 app.listen(process.env.PORT || 3000);
